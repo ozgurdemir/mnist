@@ -11,12 +11,10 @@ class Data:
         return mnist.load_data()
 
     @staticmethod
-    def normalize(X_train, X_test):
+    def normalize(x):
         """" Normalize values from 0-255 to 0-1 """
         logging.info("Normalizing to 0-1")
-        x_train = X_train / 255
-        x_test = X_test / 255
-        return x_train, x_test
+        return x / 255
 
     @staticmethod
     def categorize(y):

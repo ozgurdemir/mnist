@@ -19,7 +19,8 @@ def train():
     logging.info(args)
 
     (X_train, y_train), (X_test, y_test) = Data.mnist()
-    (X_train, X_test) = Data.normalize(X_train, X_test)
+    X_train = Data.normalize(X_train)
+    X_test = Data.normalize(X_test)
 
     (width, height) = X_train[0].shape
     channels = 1  # gray scale
@@ -35,11 +36,12 @@ def train():
 
     logging.info("Training model")
     model = Model.basic_cnn(channels, width, height, num_classes)
-    model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=args.epochs, batch_size=args.batchSize,
-              verbose=args.verbose, shuffle=True)
 
     if args.image:
         model.plot(args.image)
+
+    model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=args.epochs, batch_size=args.batchSize,
+              verbose=args.verbose, shuffle=True)
 
     logging.info("Predicting validation set")
     scores = model.evaluate(X_test, y_test, verbose=args.verbose, batch_size=args.batchSize)
