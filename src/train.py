@@ -6,8 +6,9 @@ from model import Model
 
 
 def train():
-    parser = argparse.ArgumentParser(description='A Keras dnn for digit recognition')
+    parser = argparse.ArgumentParser(description='A Keras DNN for digit recognition')
     parser.add_argument('--model', type=str, help='Path to save model to')
+    parser.add_argument('--image', type=str, help='Path to model image')
     parser.add_argument('--batchSize', type=int, help='Training batch size', default=512)
     parser.add_argument('--epochs', type=int, help='Training epochs', default=10)
     parser.add_argument('--verbose', type=int, help='Verbosity', default=1)
@@ -20,8 +21,7 @@ def train():
     (X_train, y_train), (X_test, y_test) = Data.mnist()
     (X_train, X_test) = Data.normalize(X_train, X_test)
 
-    width = 28
-    height = 28
+    (width, height) = X_train[0].shape
     channels = 1  # gray scale
 
     # preprocess labels
@@ -38,9 +38,15 @@ def train():
     model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=args.epochs, batch_size=args.batchSize,
               verbose=args.verbose, shuffle=True)
 
+    if args.image:
+        model.plot(args.image)
+
     logging.info("Predicting validation set")
-    scores = model.evaluate(X_test, y_test, verbose=1, batch_size=1)
-    print("%S: %.4f %S: %.2f%%" % (model.metrics_names[0], model.metrics_names[1], scores[0], scores[1] * 100))
+    scores = model.evaluate(X_test, y_test, verbose=args.verbose, batch_size=args.batchSize)
+    logging.info("%s: %.4f %s: %.2f%%" % (model.metrics_names[0], scores[0], model.metrics_names[1], scores[1] * 100))
+
+    logging.info("Saving model")
+    model.save_weights(args.model)
 
 
 if __name__ == "__main__":

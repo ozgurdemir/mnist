@@ -2,11 +2,12 @@ from keras.datasets import mnist
 from keras.utils import np_utils
 import logging
 
+
 class Data:
 
     @staticmethod
     def mnist():
-        logging.info("Loading Mnist dataset")
+        logging.info("Loading Mnist data set")
         return mnist.load_data()
 
     @staticmethod
@@ -21,5 +22,3 @@ class Data:
     def categorize(y):
         logging.info("Categorizing target labels")
         return np_utils.to_categorical(y)
-
-    #todo: experiment with other normalizations
